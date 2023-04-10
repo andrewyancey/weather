@@ -1,30 +1,47 @@
 import urllib.request as web
 import xml.etree.ElementTree as et
+import time
+
 
 class infocaller:
-    url = "https://forecast.weather.gov/MapClick.php?lat=38.0993&lon=-84.4431&unit=0&lg=english&FcstType=dwml"
-
-    def _init_(self):
+    url = "https://forecast.weather.gov/MapClick.php?lat=47.0542&lon=-111.2936&unit=0&lg=english&FcstType=dwml"
+    data = None
+    textdata = None
+    
+    def __init__(self):
         return
 
     def call(self):
-        data = web.urlopen(self.url)
-        return data
+        self.data = web.urlopen(self.url)
+        self.textdata = self.data.read()
 
 class parser:
 
-    def warnings(data):
+    data = None
+
+    def __init__(self, xmldata):
+        self.data = xmldata
+
+    def getwarnings(self):
         warnings = []
-        xmlroot = et.fromstring(data)
+        xmlroot = et.fromstring(self.data)
         for warning in xmlroot.iter('hazard'):
             warnings.append(warning.get('headline'))
         return warnings
 
+def displaywarnings():
+    mycaller = infocaller()
+    mycaller.call()
+    myparser = parser(mycaller.textdata)
+    warnings = myparser.getwarnings()
+    for warning in warnings:
+        print(warning)
 
-
-mycaller = infocaller()
-data = mycaller.call().read()
-warnings = parser.warnings(data)
-for warning in warnings:
-    print(warning)
+b = False
+while b == False:
+    ts = time.time()
+    t = 0
+    displaywarnings() 
+    while t < 30:
+        t = time.time() - ts
 
