@@ -1,10 +1,10 @@
+import pyttsx3
 import urllib.request as web
 import xml.etree.ElementTree as et
 import time
 
-
 class infocaller:
-    url = "https://forecast.weather.gov/MapClick.php?lat=47.0542&lon=-111.2936&unit=0&lg=english&FcstType=dwml"
+    url = "https://forecast.weather.gov/MapClick.php?lat=35.3092&lon=-99.1859&unit=0&lg=english&FcstType=dwml"
     data = None
     textdata = None
     
@@ -35,13 +35,19 @@ def displaywarnings():
     myparser = parser(mycaller.textdata)
     warnings = myparser.getwarnings()
     for warning in warnings:
+        engine.say(warning)
         print(warning)
+
+
+engine = pyttsx3.init()
+engine.setProperty('rate', 0.1)
 
 b = False
 while b == False:
     ts = time.time()
     t = 0
     displaywarnings() 
+    engine.runAndWait()
     while t < 30:
         t = time.time() - ts
 
