@@ -1,28 +1,39 @@
 import pyttsx3
 import weather
-#import urllib.request as web
-#import xml.etree.ElementTree as et
 import time
 
-def displaywarnings():
-    mycaller = weather.infocaller()
-    mycaller.call()
-    myparser = weather.parser(mycaller.textdata)
-    warnings = myparser.getwarnings()
+def displaywarnings(warnings):
     for warning in warnings:
         engine.say(warning)
         print(warning)
 
+def getwarnings():
+    mycaller = weather.infocaller()
+    mycaller.call()
+    myparser = weather.parser(mycaller.textdata)
+    warnings = myparser.getwarnings()
+    return warnings
+
+
+
+#if warning is different from previous warning
+#then sound alert
 
 engine = pyttsx3.init()
 engine.setProperty('rate', 0.1)
+previouswarning = []
 
-b = False
-while b == False:
-    ts = time.time()
-    t = 0
-    displaywarnings() 
+
+cont = False
+while cont == False:
+    print(previouswarning)
+    timestart = time.time()
+    currenttime = 0
+    currentwarnings = getwarnings()
+    if(currentwarnings != previouswarning):
+        displaywarnings(currentwarnings)
+        previouswarning = currentwarnings
     engine.runAndWait()
-    while t < 30:
-        t = time.time() - ts
+    while currenttime < 5:
+        currenttime = time.time() - timestart
 
